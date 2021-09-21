@@ -7,11 +7,13 @@ help:
 	@echo 'Terraform-specific Targets:'
 	@echo '   make start-container        Start PostgreSQL Docker container.'
 	@echo '   make stop-container         Stop PostgreSQL Docker container.'
+	@echo '   make simulate-rds           Create a user to simulate the RDS master user.'
 	@echo '   make initialize-database    Initialize the database, schema, roles and grants in the PostgreSQL instances'
 	@echo '   make teardown-database      Teardown the database, schema, roles and grants in the PostgreSQL instances'
 	@echo 'Development Database-specific Targets:'
 	@echo '   make psql-app               Connects to currently running PostgreSQL DB via `psql` as app user'
 	@echo '   make psql-admin             Connects to currently running PostgreSQL DB via `psql` as admin user'
+	@echo '   make psql-rdsuser           Connects to currently running PostgreSQL DB via `psql` as rdsuser'
 	@echo '   make psql-superuser         Connects to currently running PostgreSQL DB via `psql` as superuser'
 	@echo ''
 
@@ -32,10 +34,14 @@ clean:
 	  terraform/workspaces/database/terraform.tfstate.backup \
 	  terraform/workspaces/docker/.terraform.lock.hcl \
 	  terraform/workspaces/docker/terraform.tfstate \
-	  terraform/workspaces/docker/terraform.tfstate.backup
+	  terraform/workspaces/docker/terraform.tfstate.backup \
+	  terraform/workspaces/rdsuser/.terraform.lock.hcl \
+	  terraform/workspaces/rdsuser/terraform.tfstate \
+	  terraform/workspaces/rdsuser/terraform.tfstate.backup
 	rm -fr \
 	  terraform/workspaces/database/.terraform/ \
-	  terraform/workspaces/docker/.terraform/
+	  terraform/workspaces/docker/.terraform/ \
+	  terraform/workspaces/rdsuser/.terraform/
 	docker rm --force dev-postgres-repro
 	docker network rm dev-network-repro || true
 
@@ -54,6 +60,12 @@ stop-container:
 	@cd terraform/workspaces/docker/ && \
 	  terraform init && \
 	  terraform apply --destroy --auto-approve
+
+.PHONY: simulate-rds
+simulate-rds:
+	@cd terraform/workspaces/rdsuser/ && \
+	  terraform init && \
+	  terraform apply --auto-approve
 
 .PHONY: initialize-database
 initialize-database:
@@ -78,6 +90,10 @@ psql-app: _require-psql
 .PHONY: psql-admin
 psql-admin: _require-psql
 	psql "postgres://repro_admin:abcd1234@localhost:16340/repro"
+
+.PHONY: psql-rdsuser
+psql-rdsuser: _require-psql
+	psql "postgres://rdsuser:testpassword_rdsuser@localhost:16340/superuser_db"
 
 .PHONY: psql-superuser
 psql-superuser: _require-psql

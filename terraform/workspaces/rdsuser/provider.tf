@@ -3,8 +3,8 @@ provider "postgresql" {
   host      = "127.0.0.1"
   port      = 16340
   database  = "superuser_db"
-  username  = "rdsuser"
-  password  = "testpassword_rdsuser"
+  username  = "superuser"
+  password  = "testpassword_superuser"
   sslmode   = "disable"
   superuser = false
 }

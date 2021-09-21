@@ -18,7 +18,16 @@ $ terraform init
 $ terraform apply
 ```
 
-## Create `repro_admin` and `repro_app` Users
+## Create `rdsuser` Role
+
+```
+$ # Or `make simulate-rds`
+$ cd terraform/workspaces/rdsuser/
+$ terraform init
+$ terraform apply
+```
+
+## Create `repro_admin` and `repro_app` Roles
 
 ```
 $ # Or `make initialize-database`
@@ -45,4 +54,26 @@ $ psql "postgres://superuser:testpassword_superuser@localhost:16340/superuser_db
 
 ```
 $ make clean
+```
+
+## Development
+
+```
+$ make  # Or `make help`
+Makefile for `erraform-postgres-execute-issue` experiment
+
+Usage:
+   make clean                  Forcefully remove all generated artifacts (e.g. Terraform state files)
+Terraform-specific Targets:
+   make start-container        Start PostgreSQL Docker container.
+   make stop-container         Stop PostgreSQL Docker container.
+   make simulate-rds           Create a user to simulate the RDS master user.
+   make initialize-database    Initialize the database, schema, roles and grants in the PostgreSQL instances
+   make teardown-database      Teardown the database, schema, roles and grants in the PostgreSQL instances
+Development Database-specific Targets:
+   make psql-app               Connects to currently running PostgreSQL DB via `psql` as app user
+   make psql-admin             Connects to currently running PostgreSQL DB via `psql` as admin user
+   make psql-rdsuser           Connects to currently running PostgreSQL DB via `psql` as rdsuser
+   make psql-superuser         Connects to currently running PostgreSQL DB via `psql` as superuser
+
 ```
