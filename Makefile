@@ -5,8 +5,8 @@ help:
 	@echo 'Usage:'
 	@echo '   make clean                  Forcefully remove all generated artifacts (e.g. Terraform state files)'
 	@echo 'Terraform-specific Targets:'
-	@echo '   make start-containers       Start PostgreSQL Docker containers.'
-	@echo '   make stop-containers        Stop PostgreSQL Docker containers.'
+	@echo '   make start-container        Start PostgreSQL Docker container.'
+	@echo '   make stop-container         Stop PostgreSQL Docker container.'
 	@echo '   make initialize-database    Initialize the database, schema, roles and grants in the PostgreSQL instances'
 	@echo '   make teardown-database      Teardown the database, schema, roles and grants in the PostgreSQL instances'
 	@echo 'Development Database-specific Targets:'
@@ -43,14 +43,14 @@ clean:
 # Terraform-specific Targets
 ################################################################################
 
-.PHONY: start-containers
-start-containers:
+.PHONY: start-container
+start-container:
 	@cd terraform/workspaces/docker/ && \
 	  terraform init && \
 	  terraform apply --auto-approve
 
-.PHONY: stop-containers
-stop-containers:
+.PHONY: stop-container
+stop-container:
 	@cd terraform/workspaces/docker/ && \
 	  terraform init && \
 	  terraform apply --destroy --auto-approve
