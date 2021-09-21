@@ -45,6 +45,9 @@ $ psql "postgres://repro_app:1234abcd@localhost:16340/repro"
 $ # Or `make psql-admin`
 $ psql "postgres://repro_admin:abcd1234@localhost:16340/repro"
 ...
+$ # Or `make psql-rdsuser`
+$ psql "postgres://rdsuser:testpassword_rdsuser@localhost:16340/superuser_db"
+...
 $ # Or `make psql-superuser`
 $ psql "postgres://superuser:testpassword_superuser@localhost:16340/superuser_db"
 ...
